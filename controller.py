@@ -18,8 +18,8 @@ def login():
 
 @app.route("/usuarios", methods=['GET'])
 def checar_usuario():
-    nomeUsuario = nome_web(**request.args)
-    usuarios = mostrar_usuarios(nomeUsuario)
+    nome_usuario = nome_web(**request.args)
+    usuarios = mostrar_usuarios(nome_usuario)
     dado_usuario = [usuario_db(usuario) for usuario in usuarios]
     return jsonify(dado_usuario)
 
