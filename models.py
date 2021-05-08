@@ -1,33 +1,71 @@
 from BD_funcoes import inserir, deletar, atualizar, mostrar, selecionar
 
 #usuarios
-def post_usuarios(nome_completo, cpf):
-    inserir('usuarios', ['nome_completo','CPF'], [nome_completo, cpf])
+def post_usuarios(nome_completo, CPF):
+    return inserir('usuarios', ['nome_completo','CPF'], [nome_completo, CPF])
 
-def get_usuarios(nome_completo):
-    return selecionar('usuarios', 'nome_completo', nome_completo)
+def get_usuarios(id_usuario):
+    return selecionar('usuarios', 'id', id_usuario)[0]
 
-def delete_usuarios(id):
-    deletar('usuarios', 'id', id)
+def mostrar_usuarios(nome_completo):
+    return mostrar('usuarios', 'nome_completo', nome_completo)
 
-def put_usuarios(id, nome_completo, cpf):
-    atualizar("usuarios", "id", id, ['nome_completo','cpf'], [nome_completo,cpf])
+def delete_usuarios(id_usuario):
+    deletar('usuarios', 'id', id_usuario)
 
+def put_usuarios(id_usuario, nome_completo, CPF):
+    atualizar("usuarios", "id", id_usuario, ['nome_completo','CPF'], [nome_completo, CPF])
 
-def insert_diretores(nome):
-    inserir('diretores',['nome_completo'], [nome])
+###################################################################################################################
 
-def get_diretores(nome):
-    return mostrar('diretores', 'nome_completo', nome)
+#diretores
+def post_diretor(nome_completo):
+    return inserir('diretores', ['nome_completo'], [nome_completo])
 
+def get_diretores(id_diretor):
+    return selecionar('diretores', 'id', id_diretor)[0]
 
-def insert_generos(nome):
-    inserir('generos',['nome'], nome)
+def mostrar_diretor(nome_completo):
+    return mostrar('diretores', 'nome_completo', nome_completo)
 
-def get_generos(nome):
+def put_diretor(id_diretor, nome_completo):
+    atualizar('diretores', 'id', id_diretor, ['nome_completo'], [nome_completo])
+
+def delete_diretor(id_diretor):
+    deletar('diretores','id', id_diretor)
+
+#####################################################################################################################
+
+#generos
+def post_generos(nome):
+    return inserir('generos', ['nome'], nome)
+
+def get_generos(id_genero):
+    return selecionar('generos', 'id', id_genero)[0]
+
+def mostrar_genero(nome):
     return mostrar('generos', 'nome', nome)
 
+def put_genero(id_genero, nome):
+    atualizar('genero', 'id', id_genero, ['nome'], [nome])
 
-def insert_filmes(titulo,ano,classificacao, preco, id_diretores,id_generos):
-    inserir('filmes',['titulo','ano', 'classificacao', 'preco', 'id_diretores','id_generos'],[titulo, ano, classificacao, preco, id_diretores, id_generos])
+def delete_genero(id_genero):
+    deletar('generos','id', id_genero)
 
+##################################################################################################################################################
+
+#filmes
+def post_filmes(titulo, ano, classificacao, preco, id_diretores,id_generos):
+    return inserir('filmes', ['titulo','ano', 'classificacao', 'preco', 'id_diretores','id_generos'], [titulo, ano, classificacao, preco, id_diretores, id_generos])
+
+def get_filmes(id_filme):
+    return selecionar('filmes', id_filme)[0]
+
+def mostrar_filme(titulo):
+    return mostrar('filmes','titulo', titulo)
+
+def put_filmes(id_filme, titulo, ano, classificacao, preco, id_diretor, id_genero):
+    atualizar('filmes', 'id', id_filme, ['titulo', 'ano', 'classificacao', 'preco', 'id_diretores', 'id_generos'],[titulo, ano, classificacao, preco, id_diretor, id_genero])
+
+def delete_filme(id_filme):
+    deletar('filmes', 'id', id_filme)
