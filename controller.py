@@ -42,8 +42,8 @@ def apagar_usuario(id):
         return jsonify({"erro":"Esta ação não pode ser realizada. Usuário conectado a outras tabelas"})
 
 
-@app.route("/diretores", methods=['POST'])
-def 
+#@app.route("/diretores", methods=['POST'])
+
 
 
 
