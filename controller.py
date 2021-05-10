@@ -1,9 +1,9 @@
 from flask import Flask, jsonify, request
-from models import post_usuarios, get_usuarios, delete_usuarios, put_usuarios, mostrar_usuarios, post_diretor, get_diretor, put_diretor, mostrar_diretor, delete_diretor
-from models import post_genero, get_genero, delete_genero, put_genero, mostrar_genero, post_filme, get_filme, delete_filme, put_filme, mostrar_filme
+from models import post_usuarios, get_usuarios, delete_usuarios, put_usuarios, mostrar_usuarios, post_diretor, get_diretor, put_diretor, mostrar_diretor, delete_diretor, post_genero, get_genero, delete_genero, put_genero, mostrar_genero, post_filme, get_filme, delete_filme, put_filme, mostrar_filme
 from valida import valida_usuario, valida_diretor, valida_genero, valida_filme
-from serializador import web_usuario, usuario_db, nome_web, web_diretor, diretor_db, web_genero, genero_db, nome_genero_web
-from serializador import web_filme, filme_db, titulo_web
+from serializador import web_usuario, usuario_db, nome_web, web_diretor, diretor_db, web_genero, genero_db, nome_genero_web, web_filme, filme_db, titulo_web
+
+
 app = Flask(__name__)
 
 
@@ -15,7 +15,7 @@ def login():
         user_cadastro = get_usuarios(id_usuario)
         return jsonify(usuario_db(user_cadastro))
     else:
-        return jsonify({"erro":"Este usuario não pode ser cadastrado"})
+        return jsonify({"ERRO":"Este usuario não pode ser cadastrado"})
 
 @app.route("/usuarios", methods=['GET'])
 def checar_usuario():
@@ -32,7 +32,7 @@ def alterar_cadastro(id):
         usuario_alterado = get_usuarios(id)
         return jsonify(usuario_db(usuario_alterado))
     else:
-        return jsonify({"Erro":"Este usuario não pode ser alterado"})
+        return jsonify({"ERRO":"Usuário inválido"})
 
 @app.route("/usuarios/<int:id>", methods=['DELETE'])
 def apagar_usuario(id):
@@ -40,9 +40,10 @@ def apagar_usuario(id):
         delete_usuarios(id)
         return "", 204
     except:
-        return jsonify({"erro":"Esta ação não pode ser realizada. Usuário conectado a outras tabelas"})
+        return jsonify({"ERRO":"Esta ação não pode ser realizada. Usuário conectado a outros itens"})
 
 #############################################################################################################################################
+
 @app.route("/diretores", methods=['POST'])
 def inserir_diretor():
     diretor = web_diretor(**request.json)
@@ -51,8 +52,7 @@ def inserir_diretor():
         diretor_cadastrado = get_diretor(id_diretor)
         return jsonify(diretor_db(diretor_cadastrado))
     else:
-        return jsonify({"Erro": "Diretor não cadastrado!"})
-
+        return jsonify({"ERRO": "Diretor não cadastrado!"})
 
 @app.route("/diretores", methods=['GET'])
 def buscar_diretor():
@@ -60,7 +60,6 @@ def buscar_diretor():
     diretores = mostrar_diretor(nome_diretor)
     dado_diretor = [diretor_db(diretor) for diretor in diretores]
     return jsonify(dado_diretor)
-
 
 @app.route("/diretores/<int:id>", methods=['PUT'])
 def alterar_diretor(id):
@@ -70,8 +69,7 @@ def alterar_diretor(id):
         diretor_alterado = get_diretor(id)
         return jsonify(diretor_db(diretor_alterado))
     else:
-        return jsonify({"Erro":"Esta alteração não pode ser feita"})
-
+        return jsonify({"ERRO":"Esta alteração não pode ser feita"})
 
 @app.route("/diretores/<int:id>", methods=['DELETE'])
 def deletar_diretor(id):
@@ -79,17 +77,9 @@ def deletar_diretor(id):
         delete_diretor(id)
         return 'Diretor deletado', 204
     except:
-        return jsonify({"Erro":"Esta tabela não pode ser apagada porque há outras tabelas ligada a ela"})
+        return jsonify({"ERRO":"Esta tabela não pode ser apagada porque há outras tabelas ligada a ela"})
 
 #####################################################################################################################################################
-
-@app.route("/generos", methods=['GET'])
-def buscar_genero():
-    nome_genero = nome_genero_web(**request.args)
-    generos = mostrar_genero(nome_genero)
-    dado_genero = [genero_db(genero) for genero in generos]
-    return jsonify(dado_genero)
-
 
 @app.route("/generos", methods=['POST'])
 def inserir_genero():
@@ -99,8 +89,14 @@ def inserir_genero():
         genero_cadastro = get_genero(id_genero)
         return jsonify(genero_db(genero_cadastro))
     else:
-        return jsonify({'Erro':"Este genero não pode ser cadastrado"})
+        return jsonify({'ERRO':"Este genero não pode ser cadastrado"})
 
+@app.route("/generos", methods=['GET'])
+def buscar_genero():
+    nome_genero = nome_genero_web(**request.args)
+    generos = mostrar_genero(nome_genero)
+    dado_genero = [genero_db(genero) for genero in generos]
+    return jsonify(dado_genero)
 
 @app.route("/generos/<int:id>", methods=['PUT'])
 def alterar_genero(id):
@@ -110,7 +106,7 @@ def alterar_genero(id):
         genero_alterado = get_genero(id)
         return jsonify(genero_db(genero_alterado))
     else:
-        return jsonify({"Erro":"Este genero não pode ser alterado"})
+        return jsonify({"ERRO":"Este genero não pode ser alterado"})
 
 @app.route("/generos/<int:id>", methods=['DELETE'])
 def apagar_genero(id):
@@ -118,7 +114,7 @@ def apagar_genero(id):
         delete_genero(id)
         return '', 204
     except:
-        return jsonify({'Erro':"Este genero não pode ser deletado"})
+        return jsonify({'ERRO':"Este genero não pode ser deletado"})
 
 ######################################################################################################################################################
 
@@ -142,7 +138,7 @@ def cadastro():
 
 @app.route("/filmes/<int:id>", methods=['PUT', 'DELETE'])
 def modificacao(id):
-    if request.method=='PUT':
+    if request.method == 'PUT':
         filme = web_filme(**request.json)
         if valida_filme(**filme):
             put_filme(id, **filme)
@@ -150,6 +146,7 @@ def modificacao(id):
             return jsonify(filme_db(filme_alterado))
         else:
             return jsonify({'ERRO':'Este filme não pode ser alterado'})
+
     elif request.method == 'DELETE':
         try:
             delete_filme(id)
@@ -158,5 +155,6 @@ def modificacao(id):
             return jsonify({"ERRO":"A tabela FILMES não pode ser apagada, há outras tabelas ligadas a ela"})
 
 ######################################################################################################################################################
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug = True)

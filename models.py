@@ -17,7 +17,6 @@ def put_usuarios(id_usuario, nome_completo, CPF):
     atualizar("usuarios", "id", id_usuario, ['nome_completo','CPF'], [nome_completo, CPF])
 
 ###################################################################################################################
-
 #diretores
 def post_diretor(nome_completo):
     return inserir('diretores', ['nome_completo'], [nome_completo])
@@ -35,10 +34,9 @@ def delete_diretor(id_diretor):
     deletar('diretores','id', id_diretor)
 
 #####################################################################################################################
-
 #generos
 def post_genero(nome):
-    return inserir('generos', ['nome'], nome)
+    return inserir('generos', ['nome'], [nome])
 
 def get_genero(id_genero):
     return selecionar('generos', 'id', id_genero)[0]
@@ -47,25 +45,24 @@ def mostrar_genero(nome):
     return mostrar('generos', 'nome', nome)
 
 def put_genero(id_genero, nome):
-    atualizar('genero', 'id', id_genero, ['nome'], [nome])
+    atualizar('generos', 'id', id_genero, ['nome'], [nome])
 
 def delete_genero(id_genero):
     deletar('generos','id', id_genero)
 
 ##################################################################################################################################################
-
 #filmes
 def post_filme(titulo, ano, classificacao, preco, id_diretores,id_generos):
     return inserir('filmes', ['titulo','ano', 'classificacao', 'preco', 'id_diretores','id_generos'], [titulo, ano, classificacao, preco, id_diretores, id_generos])
 
 def get_filme(id_filme):
-    return selecionar('filmes', id_filme)[0]
+    return selecionar('filmes', 'id', id_filme)[0]
 
 def mostrar_filme(titulo):
     return mostrar('filmes','titulo', titulo)
 
-def put_filme(id_filme, titulo, ano, classificacao, preco, id_diretor, id_genero):
-    atualizar('filmes', 'id', id_filme, ['titulo', 'ano', 'classificacao', 'preco', 'id_diretores', 'id_generos'],[titulo, ano, classificacao, preco, id_diretor, id_genero])
+def put_filme(id_filme, titulo, ano, classificacao, preco, id_diretores, id_generos):
+    atualizar('filmes', 'id', id_filme, ['titulo', 'ano', 'classificacao', 'preco', 'id_diretores', 'id_generos'], [titulo, ano, classificacao, preco, id_diretores, id_generos])
 
 def delete_filme(id_filme):
     deletar('filmes', 'id', id_filme)

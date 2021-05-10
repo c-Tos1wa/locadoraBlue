@@ -5,7 +5,7 @@ def valida_usuario(nome_completo, CPF):
         return False
 
     return True
-
+########################################################################
 
 def valida_diretor(nome_completo):
     if nome_completo == "" or nome_completo == int:
@@ -13,6 +13,7 @@ def valida_diretor(nome_completo):
 
     return True
 
+#########################################################################
 
 def valida_genero(nome):
     if nome == "" or nome == int:
@@ -20,13 +21,18 @@ def valida_genero(nome):
 
     return True
 
+#################################################################################
 
 def valida_filme(titulo, ano, classificacao, preco, id_diretores, id_generos):
-    if titulo == "" or ano < 1800:
+    if titulo == "":
+        return False
+    elif ano < 1800:
         return False
     elif classificacao < 0 or classificacao > 18:
         return False
-    elif preco == str:
+    elif preco == "0":
         return False
     elif id_generos == 0 or id_diretores == 0:
         return False
+
+    return True
