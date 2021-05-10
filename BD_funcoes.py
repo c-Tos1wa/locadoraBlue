@@ -11,7 +11,7 @@ def query(sql, params=None):
 
 
 def execute(sql, params=None):
-    with connect(host="localhost", user="root", password="root", database="bluecommerce") as conn:
+    with connect(**dados_database) as conn:
         with conn.cursor() as cursor:
             cursor.execute(sql, params)
             conn.commit()
@@ -36,4 +36,3 @@ def selecionar(tabela, chave = 1, c_valor = 1):
 
 def mostrar(tabela, chave, valor):
     return query(f"select * from {tabela} where {chave} like %s", (f"%{valor}%",))
-
