@@ -4,7 +4,7 @@ dados_database = {"host":"localhost", "user":"root", "password":"root", "databas
 
 
 def query(sql, params=None):
-    with connect(host = "localhost", user = "root", password = "root", database = "bluecommerce") as conn:
+    with connect(**dados_database) as conn:
         with conn.cursor(dictionary=True) as cursor:
             cursor.execute(sql, params)
             return cursor.fetchall()
@@ -36,5 +36,4 @@ def selecionar(tabela, chave = 1, c_valor = 1):
 
 def mostrar(tabela, chave, valor):
     return query(f"select * from {tabela} where {chave} like %s", (f"%{valor}%",))
-
 
