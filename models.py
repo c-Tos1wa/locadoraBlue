@@ -22,7 +22,7 @@ def put_usuarios(id_usuario, nome_completo, CPF):
 def post_diretor(nome_completo):
     return inserir('diretores', ['nome_completo'], [nome_completo])
 
-def get_diretores(id_diretor):
+def get_diretor(id_diretor):
     return selecionar('diretores', 'id', id_diretor)[0]
 
 def mostrar_diretor(nome_completo):
@@ -37,10 +37,10 @@ def delete_diretor(id_diretor):
 #####################################################################################################################
 
 #generos
-def post_generos(nome):
+def post_genero(nome):
     return inserir('generos', ['nome'], nome)
 
-def get_generos(id_genero):
+def get_genero(id_genero):
     return selecionar('generos', 'id', id_genero)[0]
 
 def mostrar_genero(nome):
@@ -55,16 +55,16 @@ def delete_genero(id_genero):
 ##################################################################################################################################################
 
 #filmes
-def post_filmes(titulo, ano, classificacao, preco, id_diretores,id_generos):
+def post_filme(titulo, ano, classificacao, preco, id_diretores,id_generos):
     return inserir('filmes', ['titulo','ano', 'classificacao', 'preco', 'id_diretores','id_generos'], [titulo, ano, classificacao, preco, id_diretores, id_generos])
 
-def get_filmes(id_filme):
+def get_filme(id_filme):
     return selecionar('filmes', id_filme)[0]
 
 def mostrar_filme(titulo):
     return mostrar('filmes','titulo', titulo)
 
-def put_filmes(id_filme, titulo, ano, classificacao, preco, id_diretor, id_genero):
+def put_filme(id_filme, titulo, ano, classificacao, preco, id_diretor, id_genero):
     atualizar('filmes', 'id', id_filme, ['titulo', 'ano', 'classificacao', 'preco', 'id_diretores', 'id_generos'],[titulo, ano, classificacao, preco, id_diretor, id_genero])
 
 def delete_filme(id_filme):
