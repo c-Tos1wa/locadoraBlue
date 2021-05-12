@@ -1,9 +1,10 @@
 from flask import Flask, jsonify, request
 from models import post_usuarios, get_usuarios, delete_usuarios, put_usuarios, mostrar_usuarios, post_diretor, get_diretor, put_diretor, mostrar_diretor, delete_diretor, post_genero, get_genero, delete_genero, put_genero, mostrar_genero
-from models import post_filme, get_filme, delete_filme, put_filme, mostrar_filme, post_aluguel, join_locacoes_usuarios, join_locacoes_filmes_usuarios, join_locacoes_pagamento, get_aluguel
+from models import post_filme, get_filme, delete_filme, put_filme, mostrar_filme, post_aluguel, get_aluguel, put_aluguel, delete_aluguel, mostrar_aluguel, post_pagamento, get_pagamento, put_pagamento, delete_pagamento, mostrar_pagamento
 from valida import valida_usuario, valida_diretor, valida_genero, valida_filme, valida_pagamento, valida_aluguel
-from serializador import web_usuario, usuario_db, nome_web, web_diretor, diretor_db, web_genero, genero_db, nome_genero_web, web_filme, filme_db, titulo_web
-
+from serializador import web_usuario, usuario_db, nome_web, web_diretor, diretor_db, web_genero, genero_db, nome_genero_web, web_filme, filme_db, titulo_web, web_aluguel, aluguel_db, web_pagamento, pagamento_db
+from datetime import datetime, timedelta
+import random
 
 app = Flask(__name__)
 
@@ -157,5 +158,84 @@ def modificacao(id):
 
 ######################################################################################################################################################
 
+@app.route("/locacoes", methods=['POST', 'GET'])
+def cadastro_locacao():
+    if request.method == 'POST':
+        aluguel = web_aluguel(**request.json)
+        hoje = datetime.now()
+        data_devolucao = hoje + timedelta(hours=48)
+        if valida_aluguel(**aluguel):
+            id_aluguel = post_aluguel(hoje, data_devolucao, **aluguel)
+            aluguel_cadastro = get_aluguel(id_aluguel)
+            return jsonify(aluguel_db(aluguel_cadastro))
+        else:
+            return jsonify({"erro":"não foi possível efetuar a locação"})
+
+    elif request.method == 'GET':
+        aluguel = web_aluguel(**request.args)
+        locacoes = mostrar_aluguel(aluguel)
+        dado_locacao = [aluguel_db(locacao) for locacao in locacoes]
+        return jsonify(dado_locacao)
+
+@app.route("/locacoes/<int:id>", methods=['PUT', 'DELETE'])
+def alterar_locacao(id):
+    if request.method == 'PUT':
+        aluguel = web_aluguel(**request.json)
+        if valida_aluguel(**aluguel):
+            put_aluguel(id, **aluguel)
+            locacao_alterada = get_aluguel(id)
+            return jsonify(aluguel_db(locacao_alterada))
+        else:
+            return jsonify({"erro":"não é possível alterar a locação"})
+
+    elif request.method == 'DELETE':
+        try:
+            delete_aluguel(id)
+            return "", 204
+        except:
+            return jsonify({"erro":"não é possivel apagar esta locação"})
+
+###########################################################################################################################################
+
+@app.route("/pagamentos", methods=['POST'])
+def cadastro_pagamento():
+    pago = web_pagamento(**request.json)
+    pgto = ('aprovado', 'reprovado', 'em análise')
+    status_pgto = random.choice(pgto)
+    data_pgto = datetime.now()
+    codigo = str(random.randint(0, 1000))
+    if valida_pagamento(**pago):
+        id_pago = post_pagamento(status_pgto, codigo, data_pgto, **pago)
+        pgto_cadastro = get_pagamento(id_pago)
+        return jsonify(pagamento_db(pgto_cadastro))
+    else:
+        return jsonify({"erro":"pagamento não efetuado"})
+
+@app.route("/pagamentos", methods=['GET'])
+def mostrar_pagamento():
+    pgto = web_pagamento(**request.args)
+    pagamentos = mostrar_pagamento(pgto)
+    dado_pagamento = [pagamento_db(pagamento) for pagamento in pagamentos]
+    return jsonify(dado_pagamento)
+
+@app.route("/pagamentos/<int:id>", methods=['PUT'])
+def alterar_pgto(id):
+    pagamento = web_pagamento(**request.json)
+    if valida_pagamento(**pagamento):
+        put_pagamento(id, **pagamento)
+        pagamento_alterado = get_pagamento(id)
+        return jsonify(pagamento_db(pagamento_alterado))
+    else:
+        return jsonify({"erro":"esta alteração não pode ser feita"})
+
+@app.route("/pagamentos/<int:id>", methods=['DELETE'])
+def deletar_pagamento(id):
+    try:
+        delete_pagamento(id)
+        return "", 204
+    except:
+        return jsonify({"erro":"esta ação não pode ser realizada"})
+
+#######################################################################################################################################
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug = True)

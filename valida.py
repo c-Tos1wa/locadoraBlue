@@ -39,27 +39,22 @@ def valida_filme(titulo, ano, classificacao, preco, id_diretores, id_generos):
 
 ########################################################################################
 
-def valida_aluguel(data_inicio, data_final, id_usuarios, id_filmes):
+def valida_aluguel(id_usuarios, id_filmes):
     if id_usuarios == 0 or id_filmes == 0:
-        return False
-    elif len(data_inicio) == 0 or len(data_final) == 0:
         return False
 
     return True
 
 #######################################################################################
 
-def valida_pagamento(tipo, valor, data, id_locacoes):
-    if valor == 0 or valor < 0:
+def valida_pagamento(tipo, valor, id_locacoes):
+    if valor == '0' or valor < '0':
         return False
-
-    elif tipo != "dredito" or tipo != "crebito" or tipo != "paypal":
+    if tipo != "paypal" or tipo != "crebito" or tipo != "dredito":
         return False
-
-    elif len(data) == 0:
-        return False
-
-    elif id_locacoes == 0:
+    if id_locacoes == 0:
         return False
 
     return True
+
+########################################################################################

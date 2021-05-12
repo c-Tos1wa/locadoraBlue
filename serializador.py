@@ -1,6 +1,3 @@
-import uuid
-import random
-import datetime
 
 def web_usuario(**kwargs):
     return {
@@ -70,8 +67,6 @@ def filme_db(filme):
 ########################################################################################################################
 def web_aluguel(**kwargs):
     return {
-        "data_inicio":kwargs['data_inicio'] if "data_inicio" in kwargs else "",
-        "data_final":kwargs['data_final'] if "data_final" in kwargs else "",
         "id_usuarios":kwargs['id_usuarios'] if 'id_usuarios' in kwargs else "",
         "id_filmes":kwargs['id_filmes'] if 'id_filmes' in kwargs else ""
     }
@@ -79,8 +74,8 @@ def web_aluguel(**kwargs):
 def aluguel_db(locacao):
     return{
         'id':locacao['id'],
-        'data_inicio':datetime.strftime('%d-%m-%Y %H:%M:%S'(locacao['data_inicio'])),
-        'data_final':datetime.strftime('%d-%m-%Y %H:%M:%S'(locacao['data_final'])),
+        'data_inicio':locacao['data_inicio'].strftime('%d-%m-%Y %H:%M:%S'),
+        'data_final':locacao['data_final'].strftime('%d-%m-%Y %H:%M:%S'),
         'id_usuarios':locacao['id_usuarios'],
         'id_filmes':locacao['id_filmes']
     }
@@ -89,10 +84,7 @@ def aluguel_db(locacao):
 def web_pagamento(**kwargs):
     return {
         'tipo':kwargs['tipo'] if 'tipo' in kwargs else "",
-        'status':kwargs['status'] if 'status' in kwargs else "",
-        'codigo_pagamento':kwargs['codigo_pagamento'] if 'codigo_pagamento' in kwargs else "",
         'valor':kwargs['valor'] if 'valor' in kwargs else "",
-        'data':kwargs['data'] if 'data' in kwargs else "",
         "id_locacoes":kwargs['id_locacoes'] if 'id_locacoes' in kwargs else ""
     }
 
@@ -100,9 +92,8 @@ def pagamento_db(args):
     return{
         'id':args['id'],
         'tipo':args['tipo'],
-        'status':random.choice(args['status']),
-        'codigo_pagamento':uuid.uuid4(args['codigo_pagamento']),
         'valor':str(args['valor']),
-        'data':datetime.strftime('%d-%m-%Y %H:%M:%S'(args['data'])),
+        'data':args['data'].strftime('%d-%m-%Y %H:%M:%S'),
         'id_locacoes':args['id_locacoes']
     }
+########################################################################################################################

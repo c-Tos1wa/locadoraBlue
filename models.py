@@ -69,28 +69,28 @@ def delete_filme(id_filme):
 
 #######################################################################################################################################################
 #locações
-def post_aluguel(data_inicio, data_final, id_usuarios,id_filmes):
+def post_aluguel(data_inicio, data_final, id_usuarios, id_filmes):
     return inserir('locacoes', ['data_inicio', 'data_final', 'id_usuarios', 'id_filmes'], [data_inicio, data_final, id_usuarios, id_filmes])
 
-def join_locacoes_usuarios():
-    return query("SELECT locacoes.id_usuarios FROM usuarios INNER JOIN locacoes ON locacoes.id_usuarios = usuarios.id")
-
-def join_locacoes_filmes_usuarios():
-    return query("SELECT "
-                 "locacoes.id_filmes as id_filme,"
-                 "usuarios.nome_completo as nome_do_usuario,"
-                 "filmes.titulo as titulo_do_filme,"
+def join_locacoes_pagamentos():
+    return query("SELECT locacoes.id_filmes as filme,"
+                 "locacoes.id_usuarios as id_do_usuario,"
                  "locacoes.data_inicio as data_da_locacao,"
-                 "pagamento.status as status_pgto"
+                 "pagamento.tipo as tipo_pgto"
                  "FROM locacoes"
-                 "INNER JOIN usuarios ON locacoes.id_usuarios = usuarios.id"
-                 "INNER JOIN filmes ON locacoes.id_filmes = filmes.id")
+                 "INNER JOIN pagamentos ON pagamentos.id_locacoes = locacoes.id")
 
-def join_locacoes_pagamento():
-    return query("SELECT pagamento.id_locacoes FROM pagamento INNER JOIN pagamento ON pagamento.id_locacoes = pagamento.id")
+def mostrar_aluguel(id_locacoes):
+    return mostrar('locacoes','id', id_locacoes)
 
 def get_aluguel(id_locacoes):
     return selecionar('locacoes', 'id', id_locacoes)[0]
+
+def delete_aluguel(id_locacoes):
+    deletar('locacoes', 'id', id_locacoes)
+
+def put_aluguel(id_locacoes, data_inicio, data_final, id_usuarios, id_filmes):
+    atualizar('locacoes','id', id_locacoes, ['data_inicio','data_final','id_usuarios','id_filmes'], [data_inicio, data_final, id_usuarios, id_filmes])
 
 #######################################################################################################################################################
 #pagamentos
@@ -100,4 +100,15 @@ def post_pagamento(tipo, status, codigo_pagamento, valor, data, id_locacoes):
 def get_pagamento(id_pagamento):
     return selecionar('pagamento','id', id_pagamento)[0]
 
-#######################################################################################################################################################
+def get_preco(id):
+    return selecionar('filmes','id', id)[0]['preco']
+
+def mostrar_pagamento(id):
+    return mostrar('pagamento', 'id', id)
+
+def delete_pagamento(id_pagamentos):
+    deletar('pagamento','id',id_pagamentos)
+
+def put_pagamento(id_pagamento, tipo, status, codigo_pagamento, valor, data, id_locacoes):
+    atualizar('pagamento','id', id_pagamento, ['tipo', 'status', 'codigo_pagamento', 'valor', 'data', 'id_locacoes'], [tipo, status, codigo_pagamento, valor, data, id_locacoes])
+######################################################################################################################################################################
