@@ -18,21 +18,21 @@ def execute(sql, params=None):
             return cursor.lastrowid
 
 def inserir(tabela, colunas, valores):
-    execute(f"insert into {tabela} ({','.join(colunas)}) values ({','.join(['%s' for valor in valores])})", valores)
+    return execute(f"INSERT INTO {tabela} ({','.join(colunas)}) VALUES ({','.join(['%s' for valor in valores])})", valores)
 
 
 def deletar(tabela, coluna, valor):
-    execute(f"delete from {tabela} where {coluna} = %s", (valor,))
+    execute(f"DELETE FROM {tabela} WHERE {coluna} = %s", (valor,))
 
 
 def atualizar(tabela, chave, chave_valor, colunas, valores):
     set = [f"{coluna} = %s" for coluna in colunas]
-    execute(f"update {tabela} set {','.join(set)} where {chave} = %s", valores + [chave_valor])
+    execute(f"UPDATE {tabela} SET {','.join(set)} WHERE {chave} = %s", valores + [chave_valor])
 
 
 def selecionar(tabela, chave = 1, c_valor = 1):
-    return query(f"select * from {tabela} where {chave} = %s",(c_valor,))
+    return query(f"SELECT * FROM {tabela} WHERE {chave} = %s", (c_valor,))
 
 
 def mostrar(tabela, chave, valor):
-    return query(f"select * from {tabela} where {chave} like %s", (f"%{valor}%",))
+    return query(f"SELECT * FROM {tabela} WHERE {chave} LIKE %s", (f"%{valor}%",))
